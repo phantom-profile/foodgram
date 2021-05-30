@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block header %}
+    Ошибка 404: страница не найдена
+{% endblock %}
+
+
+{% block static_css %}
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="custom-center-block">
+            <p class="custom-text-block">Страница по адресу {{ path }} не найдена :-/ <br/><br/>
+                Заходите сюда почаще, может она найдется! </p>
+        {% include 'includes/index_button.html' %}
+    </div>
+{% endblock %}
+
+{% block static_js %}
+
+{% endblock %}

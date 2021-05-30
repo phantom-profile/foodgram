@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    Ошибка 500: проблемы с сервером
+{% endblock %}
+
+
+{% block static_css %}
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="custom-center-block">
+            <p class="custom-text-block">Страница недоступна по причине неполадок на сервере :-( <br/><br/>
+                Напишите на почту {{ email }} о неполадках</p>
+
+        {% include 'includes/index_button.html' %}
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+requests
+django
+djangorestframework
+isort
+python-slugify
+djangorestframework-simplejwt
+django-filter
+python-dotenv
+django-cors-headers
+pillow
+gunicorn
+factory-boy
+flake8
+django-debug-toolbar
+sorl-thumbnail

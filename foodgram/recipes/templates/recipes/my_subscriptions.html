@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block static_css %}
+    <link rel="stylesheet" href="{% static 'pages/myFollow.css' %}">
+{% endblock %}
+
+{% block header %} Мои подписки {% endblock %}
+
+{% block content %}
+    <div class="card-list">
+        {% for owner in users %}
+            <div class="card-list">
+                <div class="card-user" data-author="{{ owner.id }}">
+                <div class="card-user__header">
+                    <h2 class="card-user__title">{{ owner.get_full_name }}</h2>
+                </div>
+                <div class="card-user__body">
+                    <ul class="card-user__items">
+                        {% for recipe in owner.recipes.all|slice:":3" %}
+                            <li class="card-user__item">
+                                <div class="recipe">
+                                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="recipe__image">
+                                    <h3 class="recipe__title">{{ recipe.name }}</h3>
+                                    <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cook_time }} мин.</p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        {% if owner.recipes.all.count|add:"-3" > 0 %}
+                            <li class="card-user__item">
+                                <a href="{% url 'profile' owner.username %}" class="card-user__link link">Еще {{ owner.recipes.all.count|add:"-3" }} рецептов...</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="card-user__footer">
+                    {% include 'includes/follow_button.html' %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+        {% include 'includes/paginator.html' with items=page_obj paginator=paginator %}
+    {% endif %}
+{% endblock %}
+
+{% block static_js %}
+    <script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/MyFollow.js' %}"></script>
+    <script src="{% static 'js/components/Subscribe.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'js/templates/myFollow.js' %}"></script>
+{% endblock %}
