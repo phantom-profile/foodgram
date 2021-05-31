@@ -130,6 +130,6 @@ dmypy.json
 static/
 .idea
 .DS_Store
-foodgram/media/
-foodgram/recipes/migrations
-foodgram/staticfiles
+media/
+recipes/migrations
+staticfiles

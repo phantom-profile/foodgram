@@ -21,3 +21,9 @@ def tag_filtered(request, tag_slug):
     q_dict.setlist('tags', tags)
 
     return request.path + '?' + q_dict.urlencode()
+
+@register.filter
+def pagination(request, page):
+    request_copy = request.GET.copy()
+    request_copy["page"] = page
+    return request_copy.urlencode()
