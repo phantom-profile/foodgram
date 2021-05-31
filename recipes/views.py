@@ -121,8 +121,8 @@ class RecipeDetailView(DetailView, IsFavouriteMixin, CartMixin):
         qs = super().get_queryset()
         qs = (
             qs
-                .prefetch_related('recipe__ingredient')
-                .with_is_favourite(user_id=self.request.user.id)
+            .prefetch_related('recipe__ingredient')
+            .with_is_favourite(user_id=self.request.user.id)
         )
 
         return qs
@@ -224,7 +224,8 @@ def recipe_edit(request, username, pk):
             RecipeIngredient.objects.bulk_create(recipe_ingrids)
             return redirect('index')
 
-    return render(request, 'edit_recipe.html', {'form': form, 'recipe': instance})
+    return render(request, 'edit_recipe.html',
+                  {'form': form, 'recipe': instance})
 
 
 def page_not_found(request, exception):
@@ -232,4 +233,5 @@ def page_not_found(request, exception):
 
 
 def server_error(request):
-    return render(request, "500.html", {"email": 'wertyos111@gmail.com'}, status=500)
+    return render(request, "500.html",
+                  {"email": 'wertyos111@gmail.com'}, status=500)

@@ -44,7 +44,7 @@ class Subscribe(APIView):
 class UnSubscribe(APIView):
 
     def delete(self, request, pk, format=None):
-        author = User.objects.get(pk=pk)
+        author = get_object_or_404(User, pk=pk)
         f = Follow.objects.all().count()
         Follow.objects.filter(user=request.user, author=author).delete()
         if f > Follow.objects.all().count():

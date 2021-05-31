@@ -21,7 +21,6 @@ class BaseRecipeFactory(factory.django.DjangoModelFactory):
         model = models.Recipe
 
 
-
 class RecipeTagFactory(factory.django.DjangoModelFactory):
     recipe = factory.SubFactory(BaseRecipeFactory)
 

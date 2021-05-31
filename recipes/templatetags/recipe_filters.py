@@ -22,6 +22,7 @@ def tag_filtered(request, tag_slug):
 
     return request.path + '?' + q_dict.urlencode()
 
+
 @register.filter
 def pagination(request, page):
     request_copy = request.GET.copy()
