@@ -57,8 +57,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }} # если ваш ssh-ключ защищен паролем
           script: |
-            cd yamdb_final
-            sudo docker pull phantom8profile/foodgram
+            cd foodgram_environ
+            sudo docker pull phantom8profile/foodgram:latest
             sudo docker-compose stop
             sudo docker-compose up -d --build
             sudo docker-compose exec -T web python manage.py makemigrations recipes --noinput
