@@ -1,11 +1,9 @@
-import os
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from recipes.forms import RecipeForm
 from recipes.models import Cart, Ingredient, Recipe, RecipeIngredient, User
@@ -33,7 +31,8 @@ class CartMixin(generic.base.ContextMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            context['cart'] = get_object_or_404(Cart, owner=self.request.user)
+            context['cart'] = Cart.objects.get_or_create(
+                owner=self.request.user)[0]
         return context
 
 
@@ -41,7 +40,7 @@ class BaseRecipeListView(ListView, IsFavouriteMixin, CartMixin):
     """Base view for Recipe list."""
     context_object_name = 'recipe_list'
     queryset = Recipe.objects.all()
-    paginate_by = 6
+    paginate_by = settings.LIST_OBJECTS
     page_title = None
 
     def get_queryset(self):
@@ -149,7 +148,7 @@ class MyFollowingsView(ListView, CartMixin, LoginRequiredMixin):
 
 class MyCartView(ListView, CartMixin, LoginRequiredMixin):
     context_object_name = 'recipes'
-    paginate_by = 6
+    paginate_by = settings.LIST_OBJECTS
     template_name = 'recipes/purchase_list.html'
 
     def get_queryset(self):
@@ -158,42 +157,12 @@ class MyCartView(ListView, CartMixin, LoginRequiredMixin):
         return recipes
 
 
-@login_required
-def download_purchases(request):
-    recipes = request.user.cart.recipes.all()
-    ingredient_qs = (recipes
-                     .values('ingredients__name',
-                             'ingredients__unit',
-                             'ingredients__ingredient__amount')
-                     )
+class TechView(TemplateView, CartMixin):
+    template_name = 'technologies.html'
 
-    ingredient_list = {}
-    for ingredient in ingredient_qs:
-        name, unit, amount = ingredient.values()
-        full_name = name + ', ' + unit
-        if full_name in ingredient_list:
-            ingredient_list[full_name] += amount
-        else:
-            ingredient_list[full_name] = amount
 
-    file_name = f'{settings.MEDIA_ROOT}/{request.user.username}_cart.txt'
-    file = open(file_name, 'w', encoding='utf-8')
-
-    for name, amount in ingredient_list.items():
-        ingrid_line = f'{name} - {amount}\n'
-        file.write(ingrid_line)
-    file.close()
-    file = open(file_name, 'r', encoding='utf-8')
-    response = HttpResponse(file.read())
-    file.close()
-
-    response['Content-Type'] = 'text/plain'
-    response['Content-Length'] = str(os.stat(file_name).st_size)
-    short_name = f'{request.user.username}_cart.txt'
-    response['Content-Disposition'] = f"attachment; filename={short_name}"
-    os.remove(file_name)
-
-    return response
+class AboutView(TemplateView, CartMixin):
+    template_name = 'about_arum.html'
 
 
 def get_ingredients(request):
@@ -240,6 +209,7 @@ def recipe_edit(request, username, pk):
 
     form = RecipeForm(request.POST or None, files=request.FILES or None,
                       instance=instance)
+    RecipeIngredient.objects.filter(recipe_id=pk).delete()
 
     if request.method == 'POST':
         ingredients = get_ingredients(request)

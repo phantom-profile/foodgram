@@ -6,6 +6,7 @@ from recipes.models import (Favourite, Follow, Ingredient, Recipe,
 
 class IngredientInLine(admin.TabularInline):
     model = RecipeIngredient
+    min_num = 1
     extra = 1
 
 
@@ -22,8 +23,11 @@ class RecipeAdmin(admin.ModelAdmin):
     inlines = [IngredientInLine,
                TagInLine,
                ]
-    list_display = ('pk', 'name', 'author', 'pub_date',)
+    list_display = ('pk', 'name', 'author', 'pub_date', 'likes')
     list_filter = ('pub_date', 'name', )
+
+    def likes(self, obj):
+        return obj.favourite_by.count()
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -32,13 +36,13 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class FollowAdmin(admin.ModelAdmin):
-    list_display = ("user", "author",)
-    search_fields = ("user", "author",)
-    list_filter = ("user", "author",)
+    list_display = ('user', 'author',)
+    search_fields = ('user', 'author',)
+    list_filter = ('user', 'author',)
 
 
 class FavouriteAdmin(admin.ModelAdmin):
-    list_display = ("user", "recipe")
+    list_display = ('user', 'recipe')
 
 
 admin.site.register(Tag)

@@ -3,6 +3,7 @@
 
 {% block static_css %}
     <link rel="stylesheet" href="{% static 'pages/shopList.css' %}">
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock %}
 
 {% block header %} Список покупок {% endblock %}
@@ -22,11 +23,11 @@
                     </button>
             {% endfor %}
         </ul>
-        <a href="{% url 'download' %}"><button class="button button_style_blue">Скачать список</button></a>
-        {% if page_obj.has_other_pages %}
-            {% include 'includes/paginator.html' with items=page_obj paginator=paginator %}
-        {% endif %}
     </div>
+    <a href="{% url 'download' %}"><button class="button button_style_blue">Скачать список</button></a>
+    {% if page_obj.has_other_pages %}
+        {% include 'includes/paginator.html' with items=page_obj paginator=paginator %}
+    {% endif %}
 {% endblock %}
 
 {% block static_js %}

@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,7 +17,6 @@ class AddToFavorites(APIView):
             user=request.user,
             recipe_id=request.data['id'],
         )
-
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
@@ -23,8 +24,11 @@ class RemoveFromFavorites(APIView):
     """Remove a Recipe from User's Favorites."""
 
     def delete(self, request, pk, format=None):
+        f = Favourite.objects.all().count()
         Favourite.objects.filter(recipe_id=pk, user=request.user).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        if f > Favourite.objects.count():
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
 
 
 class Subscribe(APIView):
@@ -41,8 +45,11 @@ class UnSubscribe(APIView):
 
     def delete(self, request, pk, format=None):
         author = User.objects.get(pk=pk)
+        f = Follow.objects.all().count()
         Follow.objects.filter(user=request.user, author=author).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        if f > Follow.objects.all().count():
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)
 
 
 class GetIngredients(APIView):
@@ -75,5 +82,8 @@ class RemoveFromPurchases(APIView):
         cart = Cart.objects.get_or_create(
             owner=request.user
         )
+        c_r = CartRecipe.objects.all().count()
         CartRecipe.objects.filter(recipe_id=pk, cart_id=cart[0].pk).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        if c_r > CartRecipe.objects.all().count():
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': False}, status=status.HTTP_404_NOT_FOUND)

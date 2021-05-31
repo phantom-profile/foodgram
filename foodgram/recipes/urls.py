@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from recipes import views
+from recipes import utils, views
 from recipes.api import views as api
 
 views_patterns = [
@@ -19,7 +19,9 @@ views_patterns = [
     path('subscriptions/', views.MyFollowingsView.as_view(),
          name='subscriptions'),
     path('purchases/', views.MyCartView.as_view(), name='purchases'),
-    url(r'^download/', views.download_purchases, name='download'),
+    url(r'^download/', utils.download_purchases, name='download'),
+    path('about/', views.AboutView.as_view(), name='about'),
+    path('technologies/', views.TechView.as_view(), name='technologies'),
 ]
 
 api_patterns = [
