@@ -132,4 +132,4 @@ static/
 .DS_Store
 media/
 recipes/migrations
-staticfiles
+
