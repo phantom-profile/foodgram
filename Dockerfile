@@ -1,16 +1,10 @@
 FROM python:3.8.5
-
-# Здесь можно добавлять пакеты, которые необходимы для работы приложения
-RUN apt update
+LABEL author='Phantom-profile' version=1.1
 
 WORKDIR /code
+COPY requirements.txt /code
+RUN pip3 install -r requirements.txt
+COPY . /code
 
-# Сначала копируем requirements.txt, для того, чтобы образ собирался быстрее (см. слои докера)
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+CMD gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000
 
-# Далее копируем сам код приложения
-COPY . /code/
-WORKDIR /code/
-
-EXPOSE 8000
