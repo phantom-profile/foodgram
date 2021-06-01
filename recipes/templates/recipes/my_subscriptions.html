@@ -20,7 +20,9 @@
                         {% for recipe in owner.recipes.all|slice:":3" %}
                             <li class="card-user__item">
                                 <div class="recipe">
-                                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="recipe__image">
+                                    {% if recipe.image %}
+                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="recipe__image">
+                                    {% endif %}
                                     <h3 class="recipe__title">{{ recipe.name }}</h3>
                                     <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cook_time }} мин.</p>
                                 </div>
