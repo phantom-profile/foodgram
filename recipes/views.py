@@ -18,8 +18,8 @@ class IsFavouriteMixin:
         qs = super().get_queryset()
         qs = (
             qs
-                .select_related('author')
-                .with_is_favourite(user_id=self.request.user.id)
+            .select_related('author')
+            .with_is_favourite(user_id=self.request.user.id)
         )
 
         return qs
@@ -49,8 +49,8 @@ class BaseRecipeListView(ListView, IsFavouriteMixin, CartMixin):
         qs = super().get_queryset()
         qs = (
             qs
-                .prefetch_related('recipe__ingredient')
-                .with_is_favourite(user_id=self.request.user.id)
+            .prefetch_related('recipe__ingredient')
+            .with_is_favourite(user_id=self.request.user.id)
         )
         tags = self.request.GET.getlist('tags')
         for tag in tags:
@@ -127,8 +127,8 @@ class RecipeDetailView(DetailView, IsFavouriteMixin, CartMixin):
         qs = super().get_queryset()
         qs = (
             qs
-                .prefetch_related('recipe__ingredient')
-                .with_is_favourite(user_id=self.request.user.id)
+            .prefetch_related('recipe__ingredient')
+            .with_is_favourite(user_id=self.request.user.id)
         )
 
         return qs
