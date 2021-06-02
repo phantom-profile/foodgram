@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponse, get_object_or_404
 
-from recipes.models import RecipeIngredient, Ingredient
+from recipes.models import Ingredient, RecipeIngredient
 
 
 @login_required

@@ -17,3 +17,9 @@ class RecipeForm(forms.ModelForm):
             'tags': forms.CheckboxSelectMultiple(),
             'image': forms.FileInput(),
         }
+
+    def clean_cook_time(self):
+        data = self.cleaned_data['cook_time']
+        if data < 1:
+            raise forms.ValidationError('Значение должно быть больше 0')
+        return data
