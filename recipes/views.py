@@ -6,7 +6,8 @@ from django.views import generic
 from django.views.generic import DetailView, ListView, TemplateView
 
 from recipes.forms import RecipeForm
-from recipes.models import Cart, Ingredient, Recipe, RecipeIngredient, User
+from recipes.models import (Cart, Ingredient, Recipe, RecipeIngredient,
+                            RecipeTag, User)
 
 
 class IsFavouriteMixin:
@@ -57,6 +58,12 @@ class BaseRecipeListView(ListView, IsFavouriteMixin, CartMixin):
 
         return qs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tags = self.request.GET.getlist('tags')
+        context['tags'] = tags
+        return context
+
 
 class IndexView(BaseRecipeListView):
     """Main page that displays list of Recipes."""
@@ -71,7 +78,6 @@ class FavouriteView(LoginRequiredMixin, BaseRecipeListView):
         """Display favourite recipes only."""
         qs = super().get_queryset()
         qs = qs.filter(favourite_by__user=self.request.user)
-        print(self.request.GET)
         return qs
 
 
@@ -185,7 +191,11 @@ def new_recipe(request):
     form = RecipeForm(request.POST, files=request.FILES or None)
     ingredients = get_ingredients(request)
 
+    if not ingredients:
+        return render(request, 'recipe_form.html', {'form': form})
+
     if form.is_valid():
+        tags = form.cleaned_data['tags']
         recipe = form.save(commit=False)
         recipe.author = request.user
         recipe.save()
@@ -195,6 +205,8 @@ def new_recipe(request):
             recipe_ingrids.append(RecipeIngredient(
                 recipe=recipe, ingredient=ingredient, amount=amount
             ))
+        for tag in tags:
+            RecipeTag.objects.get_or_create(recipe=recipe, tag=tag)
         RecipeIngredient.objects.bulk_create(recipe_ingrids)
         return redirect('index')
 
@@ -213,6 +225,9 @@ def recipe_edit(request, username, pk):
 
     if request.method == 'POST':
         ingredients = get_ingredients(request)
+        if not ingredients:
+            return render(request, 'edit_recipe.html',
+                  {'form': form, 'recipe': instance})
         if form.is_valid():
             recipe = form.save()
             recipe_ingrids = []
