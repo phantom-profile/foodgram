@@ -22,11 +22,9 @@
                         <a href="{% url 'purchases' %}" class="nav__link link">
                             Список покупок
                         </a>
-                        <span id="counter">
+                        <span id="counter" class="badge badge_style_blue nav__badge">
                             {% if cart.recipes.all %}
-                                <span class="badge badge_style_blue nav__badge">
                                 {{ cart.recipes.all.count }}
-                                </span>
                             {% endif %}
                         </span>
                     </li>

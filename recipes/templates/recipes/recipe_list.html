@@ -12,9 +12,11 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock %}
 
+{% block tags %}
+    {% include 'includes/tags.html' %}
+{% endblock %}
 
 {% block content %}
-    {% include 'includes/tags.html' %}
     <div class="card-list">
         {% for recipe in page_obj %}
             {% include 'includes/recipe_card.html' with recipe=recipe %}
