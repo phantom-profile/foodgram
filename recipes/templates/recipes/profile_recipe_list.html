@@ -7,8 +7,11 @@
 
 {% block header %} {{ owner.get_full_name }} {% endblock %}
 
-{% block content %}
+{% block tags %}
     {% include 'includes/tags.html' %}
+{% endblock %}
+
+{% block content %}
     {% include 'includes/follow_button.html' %}
     <div class="card-list">
         {% for recipe in page_obj %}

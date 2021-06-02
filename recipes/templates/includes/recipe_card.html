@@ -2,7 +2,10 @@
 <div class="card" data-id="{{ recipe.id }}">
 
     {% if recipe.image %}
-        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="card__image">
+        <a class="card__title link" href="{% url 'recipe' recipe.id %}">
+            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="card__image">
+        </a>
+
     {% endif %}
 
     <div class="card__body">

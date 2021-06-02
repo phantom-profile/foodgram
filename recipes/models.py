@@ -1,8 +1,8 @@
 from typing import Optional
 
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Exists, OuterRef
 
@@ -59,9 +59,8 @@ class Recipe(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True,
                                     verbose_name='дата публикации')
     image = models.ImageField(upload_to='recipe_pictures/',
-                              blank=True,
-                              null=True,
-                              verbose_name='картинка')
+                              verbose_name='картинка',
+                              default='recipe_pictures/no_image.jpeg')
     tags = models.ManyToManyField(Tag,
                                   related_name='tagged_recipes',
                                   through='RecipeTag',
