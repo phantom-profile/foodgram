@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block page_title %} О создателе сайта {% endblock %}
+
 {% block header %}
     О создателе сайта
 {% endblock %}
@@ -11,9 +13,10 @@
 {% endblock %}
 
 {% block content %}
-
-{% endblock %}
-
-{% block static_js %}
-
+    <p class="class=nav__link link"> Проект выполнил студент Яндекс.Практикума Румянцев Андрей.
+        Мной был написан весь бэкенд сайта с помощью Django и настроена инфраструктура сервера (nginx и postgre SQL)</p>
+    <p class="class=nav__link link"> Изучаю Python уже 2 года, Django примерно год </p>
+    <p class="class=nav__link link"> Выражаю благодарность менторам и ревьюерам Яндекс.Практикума за помощь в освоении Django,
+        множеству людей со StackOverFlow за то, что спросили и ответили на кучу возникающих у меня вопросов,
+        а также моим кошкам и девушке за моральную поддержку!</p>
 {% endblock %}

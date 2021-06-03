@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block page_title %} Технологии и инструменты {% endblock %}
+
 {% block header %}
     Технологии и инструменты
 {% endblock %}
@@ -11,5 +13,11 @@
 {% endblock %}
 
 {% block content %}
-
+    <p class="class=nav__link link">Фронтэнд проекта написан на HTML, CSS и JavaScript</p>
+    <p class="class=nav__link link">Бэкенд написан на Python3 с применением Django и DRF</p>
+    <p class="class=nav__link link">IDE в которой велась разработка - PyCharm</p>
+    <p class="class=nav__link link">Инфраструктура проекта - nginx и PostgreSQL</p>
+    <p class="class=nav__link link">Проект развернут на сервере в виде трех контейнеров с помощью docker-compose</p>
+    <p class="class=nav__link link">Контроль версий и DevOps осуществлялся с помощью системы Git
+        через GitHub и GitHub actions соответственно</p>
 {% endblock %}

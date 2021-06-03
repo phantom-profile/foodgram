@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{% static 'pages/single.css' %}">
 {% endblock %}
 
+{% block page_title %} Рецепт {{ recipe.name }} {% endblock %}
 
 {% block content %}
     <div class="single-card" data-id="{{ recipe.id }}" data-author="{{ recipe.author.id }}">
