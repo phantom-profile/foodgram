@@ -183,7 +183,7 @@ def get_ingredients(request):
             ]
             ingredients[name] = amount
             if int(amount) < 1:
-                errors.append(f'Количество должно быть больше 0')
+                errors.append('Количество должно быть больше 0')
 
     if not ingredients:
         errors.append('В рецепте должны быть ингридиенты')
