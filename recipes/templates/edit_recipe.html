@@ -50,12 +50,14 @@
                                 <div class="form__dropdown-items"></div>
                             </div>
                             <input type="number" id="cantidad" class="form__input" min="1">
-                            <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
+                            <label for="cantidad" class="form__label" id="cantidadVal"> шт.</label>
                         </div>
                         <div class="form__field-group-ingredientes-container">
                         </div>
                         <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                        <span class="form__error"></span>
+                        {% for error in errors %}
+                            <span class="form__error"> {{ error }} </span>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="form__group">

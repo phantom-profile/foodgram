@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 from django.views.generic import DetailView, ListView, TemplateView
-
+from django.http.response import Http404
 from recipes.forms import RecipeForm
 from recipes.models import (Cart, Ingredient, Recipe, RecipeIngredient,
                             RecipeTag, User)
