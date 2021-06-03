@@ -173,13 +173,27 @@ class AboutView(TemplateView, CartMixin):
 
 def get_ingredients(request):
     ingredients = {}
+    errors = []
     for key in request.POST:
         if key.startswith('nameIngredient'):
             value_ingredient = key[15:]
-            ingredients[request.POST[key]] = request.POST[
+            name = request.POST[key]
+            amount = request.POST[
                 'valueIngredient_' + value_ingredient
-                ]
-    return ingredients
+            ]
+            ingredients[name] = amount
+            if int(amount) < 1:
+                errors.append(f'Количество должно быть больше 0')
+
+    if not ingredients:
+        errors.append('В рецепте должны быть ингридиенты')
+    for name in ingredients.keys():
+        try:
+            get_object_or_404(Ingredient, name=name)
+        except Http404:
+            errors.append(f'ингридиента {name} не существует')
+            return ingredients, errors
+    return ingredients, errors
 
 
 @login_required
@@ -189,10 +203,11 @@ def new_recipe(request):
         return render(request, 'recipe_form.html', {'form': form})
 
     form = RecipeForm(request.POST, files=request.FILES or None)
-    ingredients = get_ingredients(request)
+    ingredients, ingrid_errors = get_ingredients(request)
 
-    if not ingredients:
-        return render(request, 'recipe_form.html', {'form': form})
+    if ingrid_errors:
+        return render(request, 'recipe_form.html', {'form': form,
+                                                    'errors': ingrid_errors})
 
     if form.is_valid():
         tags = form.cleaned_data['tags']
@@ -203,11 +218,12 @@ def new_recipe(request):
         for name, amount in ingredients.items():
             ingredient = get_object_or_404(Ingredient, name=name)
             recipe_ingrids.append(RecipeIngredient(
-                recipe=recipe, ingredient=ingredient, amount=amount
+                recipe_id=recipe.id, ingredient=ingredient, amount=amount
             ))
         for tag in tags:
-            RecipeTag.objects.get_or_create(recipe=recipe, tag=tag)
+            RecipeTag.objects.get_or_create(recipe_id=recipe.id, tag=tag)
         RecipeIngredient.objects.bulk_create(recipe_ingrids)
+
         return redirect('index')
 
     return render(request, 'recipe_form.html', {'form': form})
@@ -224,10 +240,13 @@ def recipe_edit(request, username, pk):
     RecipeIngredient.objects.filter(recipe_id=pk).delete()
 
     if request.method == 'POST':
-        ingredients = get_ingredients(request)
-        if not ingredients:
-            return render(request, 'edit_recipe.html',
-                          {'form': form, 'recipe': instance})
+        ingredients, ingrid_errors = get_ingredients(request)
+        if ingrid_errors:
+            return render(request, 'recipe_form.html',
+                          {'form': form,
+                           'recipe': instance,
+                           'errors': ingrid_errors})
+
         if form.is_valid():
             recipe = form.save()
             recipe_ingrids = []
@@ -236,7 +255,7 @@ def recipe_edit(request, username, pk):
                 recipe_ingrids.append(RecipeIngredient(
                     recipe=recipe, ingredient=ingredient, amount=amount
                 ))
-            RecipeIngredient.objects.bulk_create(recipe_ingrids)
+                RecipeIngredient.objects.bulk_create(recipe_ingrids)
             return redirect('index')
 
     return render(request, 'edit_recipe.html',
