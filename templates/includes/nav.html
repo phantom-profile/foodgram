@@ -23,8 +23,10 @@
                             Список покупок
                         </a>
                         <span id="counter" class="badge badge_style_blue nav__badge">
-                            {% if cart.recipes.all %}
-                                {{ cart.recipes.all.count }}
+                            {% if purchases_count %}
+                                {{ purchases_count }}
+                            {% else %}
+                                0
                             {% endif %}
                         </span>
                     </li>
