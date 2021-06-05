@@ -4,14 +4,17 @@ from recipes.models import Recipe
 
 
 class RecipeForm(forms.ModelForm):
+
+    cook_time = forms.IntegerField(min_value=1)
+
     class Meta:
         model = Recipe
         fields = [
             'name',
             'image',
+            'cook_time',
             'tags',
             'description',
-            'cook_time',
         ]
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
