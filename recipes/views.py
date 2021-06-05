@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
+from django.http.response import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 from django.views.generic import DetailView, ListView, TemplateView
-from django.http.response import Http404
+
 from recipes.forms import RecipeForm
 from recipes.models import (Cart, Ingredient, Recipe, RecipeIngredient,
                             RecipeTag, Tag, User)
@@ -58,7 +60,10 @@ class BaseRecipeListView(ListView, IsFavouriteMixin, CartMixin):
             tags = Tag.objects.values_list('slug')
             tags = [slug for tag in tags for slug in tag]
 
-        qs = qs.filter(tags__slug__in=tags)
+        qs = (qs
+              .filter(tags__slug__in=tags)
+              .annotate(c=Count('pk'))
+              .order_by('-pub_date'))
         return qs
 
     def get_context_data(self, **kwargs):
