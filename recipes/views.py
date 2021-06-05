@@ -59,8 +59,6 @@ class BaseRecipeListView(ListView, IsFavouriteMixin, CartMixin):
             tags = [slug for tag in tags for slug in tag]
 
         qs = qs.filter(tags__slug__in=tags)
-
-
         return qs
 
     def get_context_data(self, **kwargs):
