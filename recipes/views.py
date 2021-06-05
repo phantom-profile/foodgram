@@ -7,7 +7,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.http.response import Http404
 from recipes.forms import RecipeForm
 from recipes.models import (Cart, Ingredient, Recipe, RecipeIngredient,
-                            RecipeTag, User)
+                            RecipeTag, Tag, User)
 
 
 class IsFavouriteMixin:
@@ -53,8 +53,13 @@ class BaseRecipeListView(ListView, IsFavouriteMixin, CartMixin):
             .with_is_favourite(user_id=self.request.user.id)
         )
         tags = self.request.GET.getlist('tags')
-        for tag in tags:
-            qs = qs.filter(tags__slug__exact=tag)
+
+        if not tags:
+            tags = Tag.objects.values_list('slug')
+            tags = [slug for tag in tags for slug in tag]
+
+        qs = qs.filter(tags__slug__in=tags)
+
 
         return qs
 
