@@ -8,29 +8,6 @@ Project description:
 
 _Website for people who loves tasty food and wants to share cooking knowledges with others_
 
-Link to foodgtam - http://84.252.132.195/
-
-Some endpoints 
-1) Ror logged out users
-        
-- http://84.252.132.195/ - main page with recipes
-
-- http://84.252.132.195/auth/signup/ - registration form
-
-- http://84.252.132.195/profiles/admin/ - my page
-
-- http://84.252.132.195/recipes/2/ - my first recipe
-
-2) For logged in users
-
-- http://84.252.132.195/recipes/create/ - recipe creation form
-
-- http://84.252.132.195/subscriptions/ - your subscriptions
-
-- http://84.252.132.195/favourites/ - your favorite recipes
-
-- http://84.252.132.195/purchases/ - recipes which you probably want to cook
-
 how to set up site on server
 1) there must be .env, docker-compose.yaml and default.conf for nginx on server in app-dir
 2) Pull web-site image from docker
